@@ -1,10 +1,28 @@
-// Minimal client-only capture (placeholder): stores to local file later or switch to real endpoint.
-// For now: instant success message; we'll wire Aeron/endpoint next step.
-document.getElementById('lead-form').addEventListener('submit', (e) => {
+const form = document.getElementById('lead-form');
+const email = document.getElementById('email');
+const msg = document.getElementById('msg');
+
+// >>> replace this with YOUR Formspree endpoint <<<
+const ENDPOINT = 'https://formspree.io/f/xqalnqpn';
+
+form.addEventListener('submit', async (e) => {
   e.preventDefault();
-  const email = document.getElementById('email').value.trim();
-  const msg = document.getElementById('msg');
-  if (!email) { msg.textContent = 'Enter a valid email.'; return; }
-  msg.textContent = 'Got it. You’re in.';
-  e.target.reset();
+  msg.textContent = 'Saving...';
+  try {
+    const data = new FormData(form);
+    data.append('ua', navigator.userAgent);
+    const res = await fetch(ENDPOINT, {
+      method: 'POST',
+      body: data,
+      headers: { 'Accept': 'application/json' }
+    });
+    if (res.ok) {
+      msg.textContent = 'Got it. You’re in.';
+      form.reset();
+    } else {
+      msg.textContent = 'Could not save. Try again.';
+    }
+  } catch (err) {
+    msg.textContent = 'Network error. Try again.';
+  }
 });
