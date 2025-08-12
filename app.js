@@ -17,11 +17,14 @@ form.addEventListener('submit', async (e) => {
       headers: { 'Accept': 'application/json' }
     });
     if (res.ok) {
-      msg.textContent = 'Got it. You’re in.';
-      form.reset();
-    } else {
-      msg.textContent = 'Could not save. Try again.';
-    }
+    msg.textContent = 'Got it. You’re in.';
+    msg.classList.add('success');
+    form.reset();
+} else {
+    msg.textContent = 'Could not save. Try again.';
+    msg.classList.remove('success');
+}
+
   } catch (err) {
     msg.textContent = 'Network error. Try again.';
   }
